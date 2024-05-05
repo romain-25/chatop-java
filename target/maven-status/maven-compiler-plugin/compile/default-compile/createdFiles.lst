@@ -1,0 +1,9 @@
+com/openclassroom/chatopjava/service/UserService.class
+com/openclassroom/chatopjava/ChatopJavaApplication.class
+com/openclassroom/chatopjava/configuration/SpringSecurityConfig.class
+com/openclassroom/chatopjava/controller/ResourceController.class
+com/openclassroom/chatopjava/controller/LoginController.class
+com/openclassroom/chatopjava/service/JwtService.class
+com/openclassroom/chatopjava/model/UserModel.class
+com/openclassroom/chatopjava/dto/UserDTO.class
+com/openclassroom/chatopjava/repository/UserRepository.class
