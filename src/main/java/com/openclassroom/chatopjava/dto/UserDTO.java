@@ -18,5 +18,4 @@ public class UserDTO {
     private String password;
     private Date createdAt;
     private Date updatedAt;
-
 }

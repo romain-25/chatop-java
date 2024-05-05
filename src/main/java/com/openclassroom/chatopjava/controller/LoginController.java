@@ -1,9 +1,13 @@
 package com.openclassroom.chatopjava.controller;
 
+import com.openclassroom.chatopjava.dto.UserCreateDto;
+import com.openclassroom.chatopjava.dto.UserLoginDto;
 import com.openclassroom.chatopjava.model.UserModel;
 import com.openclassroom.chatopjava.service.JwtService;
 import com.openclassroom.chatopjava.service.UserService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,16 +23,18 @@ import java.util.ArrayList;
 public class LoginController {
     private JwtService jwtService;
     private UserService userService;
+    @Autowired
+    private ModelMapper modelMapper;
     public LoginController(JwtService jwtService, UserService userService) {
         this.jwtService = jwtService;
         this.userService = userService;
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody UserModel user) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto user) {
         System.out.println(user.toString());
         UserModel existingUser = userService.getUserByEmail(user.getEmail());
-        if (existingUser != null && existingUser.getPassword().equals(user.getPassword())) {
+        if (existingUser != null && userService.checkPassword(user, existingUser)) {
             Authentication authentication = new UsernamePasswordAuthenticationToken(existingUser.getEmail(), null, new ArrayList<>());
             String token = jwtService.generateToken(authentication);
             return ResponseEntity.ok(token);
@@ -38,7 +44,7 @@ public class LoginController {
     }
 
     @PostMapping("/auth/register")
-    public ResponseEntity<?> register(@RequestBody UserModel user) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserCreateDto user) {
         System.out.println(user.toString());
         UserModel existingUser = userService.getUserByEmail(user.getEmail());
         if (existingUser == null) {

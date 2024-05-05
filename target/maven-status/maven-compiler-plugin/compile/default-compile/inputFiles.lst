@@ -1,4 +1,6 @@
+/Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/dto/UserLoginDto.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/configuration/SpringSecurityConfig.java
+/Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/dto/UserCreateDto.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/controller/LoginController.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/repository/UserRepository.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/service/JwtService.java
