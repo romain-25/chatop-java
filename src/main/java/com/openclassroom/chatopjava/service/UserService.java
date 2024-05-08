@@ -32,7 +32,7 @@ public class UserService {
     public UserModel createUser(UserCreateDto userDto) {
         UserModel user = modelMapper.map(userDto, UserModel.class);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setCreatedAt(new Date());
+        user.setCreated_at(new Date());
         return userRepository.save(user);
     }
 
