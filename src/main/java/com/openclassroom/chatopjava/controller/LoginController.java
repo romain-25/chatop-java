@@ -1,5 +1,6 @@
 package com.openclassroom.chatopjava.controller;
 
+import com.openclassroom.chatopjava.dto.TokenDto;
 import com.openclassroom.chatopjava.dto.UserCreateDto;
 import com.openclassroom.chatopjava.dto.UserLoginDto;
 import com.openclassroom.chatopjava.model.UserModel;
@@ -12,14 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class LoginController {
     private JwtService jwtService;
     private UserService userService;
@@ -37,7 +36,8 @@ public class LoginController {
         if (existingUser != null && userService.checkPassword(user, existingUser)) {
             Authentication authentication = new UsernamePasswordAuthenticationToken(existingUser.getEmail(), null, new ArrayList<>());
             String token = jwtService.generateToken(authentication);
-            return ResponseEntity.ok(token);
+            TokenDto tokenDto = new TokenDto(token);
+            return ResponseEntity.ok(tokenDto);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect");
         }
@@ -51,13 +51,14 @@ public class LoginController {
             UserModel newUser = userService.createUser(user);
             Authentication authentication = new UsernamePasswordAuthenticationToken(newUser.getEmail(), null, new ArrayList<>());
             String token = jwtService.generateToken(authentication);
-            return ResponseEntity.ok(token);
+            TokenDto tokenDto = new TokenDto(token);
+            return ResponseEntity.ok(tokenDto);
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Un utilisateur avec cet email existe déjà");
         }
     }
 
-    @GetMapping("/me")
+    @GetMapping("/auth/me")
     public ResponseEntity<?> me(Authentication authentication) {
         UserModel currentUser = userService.getUserByEmail(authentication.getName());
         return ResponseEntity.ok(currentUser);
