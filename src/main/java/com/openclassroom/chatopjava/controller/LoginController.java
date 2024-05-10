@@ -65,5 +65,3 @@ public class LoginController {
     }
 
 }
-
-//curl -X POST -d '{"email":"test@test.fr"},"password":"test-25"' -H "Content-Type: application/json" http://localhost:8080/auth/login
