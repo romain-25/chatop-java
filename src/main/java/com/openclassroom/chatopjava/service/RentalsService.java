@@ -77,15 +77,19 @@ public class RentalsService {
     public RentalsModel createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
         UserModel user = userRepository.findByEmail(userEmail);
-//        Path path = Paths.get("src/main/resources/public/images/" + picture.getOriginalFilename());
-//        String baseUrl = "http://localhost:8080/api/images/";
-//        byte[] bytes = picture.getBytes();
-//        Files.write(path, bytes);
-//        rental.setPicture(baseUrl + picture.getOriginalFilename());
-        String fileUrl = uploadFileToS3(picture);
-        RentalsModel rental = new RentalsModel();
+        Path uploadPath = Paths.get("uploads/images");
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
 
-        rental.setPicture(fileUrl);
+        Path path = uploadPath.resolve(picture.getOriginalFilename());
+        String baseUrl = "http://localhost:8080/api/images/";
+        byte[] bytes = picture.getBytes();
+        Files.write(path, bytes);
+        RentalsModel rental = new RentalsModel();
+        rental.setPicture(baseUrl + picture.getOriginalFilename());
+        //String fileUrl = uploadFileToS3(picture);
+        //rental.setPicture(fileUrl);
         rental.setName(name);
         rental.setSurface(surface);
         rental.setPrice(price);
