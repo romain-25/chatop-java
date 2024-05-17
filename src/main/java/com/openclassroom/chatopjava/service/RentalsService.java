@@ -44,13 +44,10 @@ public class RentalsService {
     private JwtService jwtService;
     @Value("${aws.accessKeyId}")
     private String awsAccessKeyId;
-
     @Value("${aws.secretAccessKey}")
     private String awsSecretAccessKey;
-
     @Value("${aws.s3.bucketName}")
     private String bucketName;
-
     private S3Client s3Client;
     @PostConstruct
     public void init() {
@@ -78,17 +75,16 @@ public class RentalsService {
     }
 
     public RentalsModel createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
-
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
-        System.out.println(picture.getOriginalFilename());
         UserModel user = userRepository.findByEmail(userEmail);
-        Path path = Paths.get("src/main/resources/public/images/" + picture.getOriginalFilename());
-        String baseUrl = "http://localhost:8080/api/images/";
-        byte[] bytes = picture.getBytes();
-        Files.write(path, bytes);
+//        Path path = Paths.get("src/main/resources/public/images/" + picture.getOriginalFilename());
+//        String baseUrl = "http://localhost:8080/api/images/";
+//        byte[] bytes = picture.getBytes();
+//        Files.write(path, bytes);
+//        rental.setPicture(baseUrl + picture.getOriginalFilename());
         String fileUrl = uploadFileToS3(picture);
         RentalsModel rental = new RentalsModel();
-//        rental.setPicture(baseUrl + picture.getOriginalFilename());
+
         rental.setPicture(fileUrl);
         rental.setName(name);
         rental.setSurface(surface);
@@ -115,20 +111,20 @@ public class RentalsService {
         return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm();
     }
 
-    public RentalsModel updateRental(Long rentalId, Long ownerId, RentalsModel newRental) {
+    public RentalsModel updateRental(Long rentalId, String name, Long surface, Long price, String description, String bearerToken) {
         RentalsModel rentalToUpdate = rentalsRepository.findById(rentalId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location non trouvée"));
-
-        if (ownerId.equals(rentalToUpdate.getOwner_id())) {
-            if (newRental.getName() != null) rentalToUpdate.setName(newRental.getName());
-            if (newRental.getSurface() != null) rentalToUpdate.setSurface(newRental.getSurface());
-            if (newRental.getPrice() != null) rentalToUpdate.setPrice(newRental.getPrice());
-            if (newRental.getPicture() != null) rentalToUpdate.setPicture(newRental.getPicture());
-            if (newRental.getDescription() != null) rentalToUpdate.setDescription(newRental.getDescription());
+        String userEmail = jwtService.getSubjectFromToken(bearerToken);
+        UserModel user = userRepository.findByEmail(userEmail);
+        if (user.getId().equals(rentalToUpdate.getOwner_id())) {
+            if (name!= null) rentalToUpdate.setName(name);
+            if (surface != null) rentalToUpdate.setSurface(surface);
+            if (price != null) rentalToUpdate.setPrice(price);
+            if (description != null) rentalToUpdate.setDescription(description);
             rentalToUpdate.setUpdated_at(new Date());
             return rentalsRepository.save(rentalToUpdate);
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Seul le propriétaire peut mettre à jour la location");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Seul le propriétaire peut mettre à jour l'annonce'");
         }
     }
 }
