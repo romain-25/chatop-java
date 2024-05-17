@@ -6,8 +6,10 @@ import com.openclassroom.chatopjava.model.RentalsModel;
 import com.openclassroom.chatopjava.model.UserModel;
 import com.openclassroom.chatopjava.repository.RentalsRepository;
 import com.openclassroom.chatopjava.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +25,12 @@ import java.util.Date;
 import java.util.List;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 @Service
 public class RentalsService {
@@ -34,7 +42,24 @@ public class RentalsService {
     private UserRepository userRepository;
     @Autowired
     private JwtService jwtService;
+    @Value("${aws.accessKeyId}")
+    private String awsAccessKeyId;
 
+    @Value("${aws.secretAccessKey}")
+    private String awsSecretAccessKey;
+
+    @Value("${aws.s3.bucketName}")
+    private String bucketName;
+
+    private S3Client s3Client;
+    @PostConstruct
+    public void init() {
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey);
+        this.s3Client = S3Client.builder()
+                .region(Region.EU_NORTH_1)
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .build();
+    }
     public RentalsListDto getAllRentals() {
         Iterable<RentalsModel> rentalsModels = rentalsRepository.findAll();
         List<RentalsDto> rentalsDtos = new ArrayList<>();
@@ -61,15 +86,10 @@ public class RentalsService {
         String baseUrl = "http://localhost:8080/api/images/";
         byte[] bytes = picture.getBytes();
         Files.write(path, bytes);
-        // save file to AWS S3
-//        AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
-//        File convFile = new File(file.getOriginalFilename());
-//        FileOutputStream fos = new FileOutputStream(convFile);
-//        fos.write(file.getBytes());
-//        fos.close();
-//        s3client.putObject(new PutObjectRequest("your-bucket-name", file.getOriginalFilename(), convFile));
+        String fileUrl = uploadFileToS3(picture);
         RentalsModel rental = new RentalsModel();
-        rental.setPicture(baseUrl + picture.getOriginalFilename());
+//        rental.setPicture(baseUrl + picture.getOriginalFilename());
+        rental.setPicture(fileUrl);
         rental.setName(name);
         rental.setSurface(surface);
         rental.setPrice(price);
@@ -77,6 +97,22 @@ public class RentalsService {
         rental.setOwner_id(user.getId());
         rental.setCreated_at(new Date());
         return rentalsRepository.save(rental);
+    }
+
+    private String uploadFileToS3(MultipartFile file) throws IOException {
+        String key = "images/" + file.getOriginalFilename();
+
+        try {
+            s3Client.putObject(PutObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(key)
+                            .build(),
+                    software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+        } catch (S3Exception e) {
+            throw new RuntimeException("Failed to upload file to S3", e);
+        }
+
+        return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm();
     }
 
     public RentalsModel updateRental(Long rentalId, Long ownerId, RentalsModel newRental) {
