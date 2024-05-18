@@ -1,6 +1,8 @@
 com/openclassroom/chatopjava/model/RentalsModel.class
 com/openclassroom/chatopjava/configuration/CorsConfig$1.class
+com/openclassroom/chatopjava/controller/MessageController.class
 com/openclassroom/chatopjava/model/UserModel.class
+com/openclassroom/chatopjava/dto/MessageDtoResponse.class
 com/openclassroom/chatopjava/configuration/CorsConfig.class
 com/openclassroom/chatopjava/repository/UserRepository.class
 com/openclassroom/chatopjava/service/UserService.class
@@ -11,10 +13,15 @@ com/openclassroom/chatopjava/service/RentalsService.class
 com/openclassroom/chatopjava/dto/RentalsResponseDto.class
 com/openclassroom/chatopjava/dto/UserDTO.class
 com/openclassroom/chatopjava/dto/RentalsListDto.class
+com/openclassroom/chatopjava/service/MessageService.class
+com/openclassroom/chatopjava/repository/MessageRepository.class
 com/openclassroom/chatopjava/dto/UserCreateDto.class
 com/openclassroom/chatopjava/dto/UserLoginDto.class
+com/openclassroom/chatopjava/controller/WebConfig.class
 com/openclassroom/chatopjava/repository/RentalsRepository.class
 com/openclassroom/chatopjava/dto/RentalsDto.class
+com/openclassroom/chatopjava/model/MessageModel.class
+com/openclassroom/chatopjava/dto/MessageDtoRequest.class
 com/openclassroom/chatopjava/controller/ResourceController.class
 com/openclassroom/chatopjava/service/JwtService.class
 com/openclassroom/chatopjava/dto/TokenDto.class

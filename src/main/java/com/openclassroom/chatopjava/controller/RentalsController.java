@@ -1,5 +1,6 @@
 package com.openclassroom.chatopjava.controller;
 
+import com.openclassroom.chatopjava.dto.MessageDtoResponse;
 import com.openclassroom.chatopjava.dto.RentalsListDto;
 import com.openclassroom.chatopjava.model.RentalsModel;
 import com.openclassroom.chatopjava.repository.RentalsRepository;
@@ -40,7 +41,7 @@ public class RentalsController {
     }
 
     @PostMapping("/rentals")
-    public ResponseEntity<RentalsModel> createRental(
+    public ResponseEntity<MessageDtoResponse> createRental(
             @RequestParam("name") String name,
             @RequestParam("surface") Long surface,
             @RequestParam("price") Long price,
@@ -52,7 +53,7 @@ public class RentalsController {
     }
 
     @PutMapping("/rentals/{id}")
-    public ResponseEntity<RentalsModel> updateRental(
+    public ResponseEntity<MessageDtoResponse> updateRental(
             @PathVariable("id") Long id,
             @RequestParam("name") String name,
             @RequestParam("surface") Long surface,

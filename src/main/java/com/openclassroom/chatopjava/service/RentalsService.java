@@ -1,5 +1,6 @@
 package com.openclassroom.chatopjava.service;
 
+import com.openclassroom.chatopjava.dto.MessageDtoResponse;
 import com.openclassroom.chatopjava.dto.RentalsDto;
 import com.openclassroom.chatopjava.dto.RentalsListDto;
 import com.openclassroom.chatopjava.model.RentalsModel;
@@ -71,32 +72,35 @@ public class RentalsService {
 
     public RentalsModel getRental(Long idRental) {
         return rentalsRepository.findById(idRental)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location non trouvée"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
     }
 
-    public RentalsModel createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
+    public MessageDtoResponse createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
         UserModel user = userRepository.findByEmail(userEmail);
-        Path uploadPath = Paths.get("uploads/images");
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        Path path = uploadPath.resolve(picture.getOriginalFilename());
-        String baseUrl = "http://localhost:8080/api/images/";
-        byte[] bytes = picture.getBytes();
-        Files.write(path, bytes);
+//        Path uploadPath = Paths.get("uploads/images");
+//        if (!Files.exists(uploadPath)) {
+//            Files.createDirectories(uploadPath);
+//        }
+//
+//        Path path = uploadPath.resolve(picture.getOriginalFilename());
+//        String baseUrl = "http://localhost:3001/api/images/";
+//        byte[] bytes = picture.getBytes();
+//        Files.write(path, bytes);
         RentalsModel rental = new RentalsModel();
-        rental.setPicture(baseUrl + picture.getOriginalFilename());
-        //String fileUrl = uploadFileToS3(picture);
-        //rental.setPicture(fileUrl);
+//        rental.setPicture(baseUrl + picture.getOriginalFilename());
+        String fileUrl = uploadFileToS3(picture);
+        rental.setPicture(fileUrl);
         rental.setName(name);
         rental.setSurface(surface);
         rental.setPrice(price);
         rental.setDescription(description);
         rental.setOwner_id(user.getId());
         rental.setCreated_at(new Date());
-        return rentalsRepository.save(rental);
+        MessageDtoResponse messageDtoResponse = new MessageDtoResponse();
+        messageDtoResponse.setMessage("Your real estate ad has been created");
+        rentalsRepository.save(rental);
+        return messageDtoResponse;
     }
 
     private String uploadFileToS3(MultipartFile file) throws IOException {
@@ -115,9 +119,9 @@ public class RentalsService {
         return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm();
     }
 
-    public RentalsModel updateRental(Long rentalId, String name, Long surface, Long price, String description, String bearerToken) {
+    public MessageDtoResponse updateRental(Long rentalId, String name, Long surface, Long price, String description, String bearerToken) {
         RentalsModel rentalToUpdate = rentalsRepository.findById(rentalId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location non trouvée"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
         UserModel user = userRepository.findByEmail(userEmail);
         if (user.getId().equals(rentalToUpdate.getOwner_id())) {
@@ -126,9 +130,12 @@ public class RentalsService {
             if (price != null) rentalToUpdate.setPrice(price);
             if (description != null) rentalToUpdate.setDescription(description);
             rentalToUpdate.setUpdated_at(new Date());
-            return rentalsRepository.save(rentalToUpdate);
+            rentalsRepository.save(rentalToUpdate);
+            MessageDtoResponse messageDtoResponse = new MessageDtoResponse();
+            messageDtoResponse.setMessage("Your real estate ad has been updated");
+            return messageDtoResponse;
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Seul le propriétaire peut mettre à jour l'annonce'");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only the owner can update the listing'");
         }
     }
 }
