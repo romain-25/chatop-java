@@ -41,7 +41,6 @@ public class LoginController {
     })
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto user) {
-        System.out.println(user.toString());
         UserModel existingUser = userService.getUserByEmail(user.getEmail());
         if (existingUser != null && userService.checkPassword(user, existingUser)) {
             Authentication authentication = new UsernamePasswordAuthenticationToken(existingUser.getEmail(), null, new ArrayList<>());
@@ -61,7 +60,6 @@ public class LoginController {
     })
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserCreateDto user) {
-        System.out.println(user.toString());
         UserModel existingUser = userService.getUserByEmail(user.getEmail());
         if (existingUser == null) {
             UserModel newUser = userService.createUser(user);

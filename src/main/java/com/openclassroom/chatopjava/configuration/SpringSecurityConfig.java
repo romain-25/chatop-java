@@ -23,6 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
+
     private String jwtKey = "CyvAycrHQfjQV6bBkS7Vg3yACEmcUcC9aHB7WzH0ngU5wEdU6BH4Bv22KA4uDGge";
     /**
      * Configures the JwtDecoder bean.
