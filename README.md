@@ -65,7 +65,7 @@
     setx SPRING_DATASOURCE_PASSWORD "your_datasource_password"
     setx SPRING_DATASOURCE_URL "your_datasource_url"
     setx SPRING_DATASOURCE_USERNAME "your_datasource_username"
-    setx JWT_SECRET_KEY=your_secret_key_jwt
+    setx JWT_SECRET_KEY="your_secret_key_jwt"
     ```
 
 4. Clone the repository:

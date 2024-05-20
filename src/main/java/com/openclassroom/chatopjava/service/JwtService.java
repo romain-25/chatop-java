@@ -16,18 +16,13 @@ import java.time.temporal.ChronoUnit;
 public class JwtService {
     private JwtEncoder jwtEncoder;
     private JwtDecoder jwtDecoder;
-    @Value("${jwt.secret.key}")
-    private String jwtKey;
     /**
      * Constructs a new JwtService with the given JwtEncoder.
      *
      * @param jwtEncoder the JwtEncoder used for encoding JWT tokens
      */
-    public JwtService(JwtEncoder jwtEncoder) {
+    public JwtService(@Value("${jwt.secret.key}") String jwtKey, JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
-
-        //private String awsAccessKeyId;
-        //String jwtKey = "CyvAycrHQfjQV6bBkS7Vg3yACEmcUcC9aHB7WzH0ngU5wEdU6BH4Bv22KA4uDGge";
         SecretKey secretKey = new SecretKeySpec(jwtKey.getBytes(), "HmacSHA256");
         this.jwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey).build();
     }

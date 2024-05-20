@@ -17,9 +17,9 @@ com/openclassroom/chatopjava/service/MessageService.class
 com/openclassroom/chatopjava/repository/MessageRepository.class
 com/openclassroom/chatopjava/dto/UserCreateDto.class
 com/openclassroom/chatopjava/dto/UserLoginDto.class
-com/openclassroom/chatopjava/controller/WebConfig.class
 com/openclassroom/chatopjava/repository/RentalsRepository.class
 com/openclassroom/chatopjava/dto/RentalsDto.class
+com/openclassroom/chatopjava/configuration/WebConfig.class
 com/openclassroom/chatopjava/model/MessageModel.class
 com/openclassroom/chatopjava/dto/MessageDtoRequest.class
 com/openclassroom/chatopjava/controller/ResourceController.class

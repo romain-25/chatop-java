@@ -4,7 +4,6 @@
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/dto/RentalsListDto.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/dto/MessageDtoResponse.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/dto/MessageDtoRequest.java
-/Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/controller/WebConfig.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/dto/UserCreateDto.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/model/MessageModel.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/controller/MessageController.java
@@ -23,5 +22,6 @@
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/controller/LoginController.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/service/JwtService.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/dto/RentalsDto.java
+/Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/configuration/WebConfig.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/model/RentalsModel.java
 /Users/romain/SynologyDrive/Document/Master/Livrables/Projet 3/Developpez-le-back-end-en-utilisant-Java-et-Spring/chatop-java/src/main/java/com/openclassroom/chatopjava/service/RentalsService.java
