@@ -55,21 +55,6 @@ public class SpringSecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/resources/**",
-                                "/api/images/**",
-                                "/static/**",
-                                "/images/**",
-                                "/uploads/**",
-                                "/uploads/images",
-                                "/auth/**",
-                                "/swagger*/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs",
-                                "/v3/api-docs/swagger-config"
-                                ).permitAll()
-                        .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
