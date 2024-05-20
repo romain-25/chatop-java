@@ -6,6 +6,11 @@ import com.openclassroom.chatopjava.dto.UserLoginDto;
 import com.openclassroom.chatopjava.model.UserModel;
 import com.openclassroom.chatopjava.service.JwtService;
 import com.openclassroom.chatopjava.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:4200")
 public class LoginController {
     private JwtService jwtService;
     private UserService userService;
@@ -28,7 +32,13 @@ public class LoginController {
         this.jwtService = jwtService;
         this.userService = userService;
     }
-
+    @Operation(summary = "User login", description = "Authenticate user and return a JWT token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful login",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class)) }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content)
+    })
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto user) {
         System.out.println(user.toString());
@@ -42,7 +52,13 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect");
         }
     }
-
+    @Operation(summary = "User registration", description = "Register a new user and return a JWT token for login with new user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful registration",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class)) }),
+            @ApiResponse(responseCode = "409", description = "Conflict - User already exists",
+                    content = @Content)
+    })
     @PostMapping("/auth/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserCreateDto user) {
         System.out.println(user.toString());
@@ -57,7 +73,11 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Un utilisateur avec cet email existe déjà");
         }
     }
-
+    @Operation(summary = "Get current user", description = "Get the authenticated user's details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class)) })
+    })
     @GetMapping("/auth/me")
     public ResponseEntity<?> me(Authentication authentication) {
         UserModel currentUser = userService.getUserByEmail(authentication.getName());

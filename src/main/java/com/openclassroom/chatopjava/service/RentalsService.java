@@ -58,6 +58,11 @@ public class RentalsService {
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
     }
+    /**
+     * Retrieves all rentals.
+     *
+     * @return a DTO containing the list of all rentals
+     */
     public RentalsListDto getAllRentals() {
         Iterable<RentalsModel> rentalsModels = rentalsRepository.findAll();
         List<RentalsDto> rentalsDtos = new ArrayList<>();
@@ -69,26 +74,33 @@ public class RentalsService {
         rentalsListDto.setRentals(rentalsDtos);
         return rentalsListDto;
     }
-
+    /**
+     * Retrieves a rental by its ID.
+     *
+     * @param idRental the ID of the rental to retrieve
+     * @return the rental model
+     * @throws ResponseStatusException if the rental is not found
+     */
     public RentalsModel getRental(Long idRental) {
         return rentalsRepository.findById(idRental)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
     }
-
+    /**
+     * Creates a new rental.
+     *
+     * @param name         the name of the rental
+     * @param surface      the surface area of the rental
+     * @param price        the price of the rental
+     * @param description  the description of the rental
+     * @param bearerToken  the authentication token of the user
+     * @param picture      the picture file of the rental
+     * @return a response DTO with a success message
+     * @throws IOException if there is an error processing the picture file
+     */
     public MessageDtoResponse createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
         String userEmail = jwtService.getSubjectFromToken(bearerToken);
         UserModel user = userRepository.findByEmail(userEmail);
-//        Path uploadPath = Paths.get("uploads/images");
-//        if (!Files.exists(uploadPath)) {
-//            Files.createDirectories(uploadPath);
-//        }
-//
-//        Path path = uploadPath.resolve(picture.getOriginalFilename());
-//        String baseUrl = "http://localhost:3001/api/images/";
-//        byte[] bytes = picture.getBytes();
-//        Files.write(path, bytes);
         RentalsModel rental = new RentalsModel();
-//        rental.setPicture(baseUrl + picture.getOriginalFilename());
         String fileUrl = uploadFileToS3(picture);
         rental.setPicture(fileUrl);
         rental.setName(name);
@@ -102,7 +114,14 @@ public class RentalsService {
         rentalsRepository.save(rental);
         return messageDtoResponse;
     }
-
+    /**
+     * Uploads a file to S3.
+     *
+     * @param file the file to upload
+     * @return the URL of the uploaded file
+     * @throws IOException if there is an error processing the file
+     * @throws RuntimeException if there is an error uploading the file to S3
+     */
     private String uploadFileToS3(MultipartFile file) throws IOException {
         String key = "images/" + file.getOriginalFilename();
 
@@ -118,7 +137,18 @@ public class RentalsService {
 
         return s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm();
     }
-
+    /**
+     * Updates an existing rental.
+     *
+     * @param rentalId    the ID of the rental to update
+     * @param name        the new name of the rental
+     * @param surface     the new surface area of the rental
+     * @param price       the new price of the rental
+     * @param description the new description of the rental
+     * @param bearerToken the authentication token of the user
+     * @return a response DTO with a success message
+     * @throws ResponseStatusException if the rental is not found or the user is not authorized
+     */
     public MessageDtoResponse updateRental(Long rentalId, String name, Long surface, Long price, String description, String bearerToken) {
         RentalsModel rentalToUpdate = rentalsRepository.findById(rentalId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
