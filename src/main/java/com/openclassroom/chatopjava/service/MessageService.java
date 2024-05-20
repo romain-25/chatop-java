@@ -13,6 +13,12 @@ import java.util.Date;
 public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
+    /**
+     * Creates a new message and saves it to the repository.
+     *
+     * @param messageDtoRequest the DTO containing the message details
+     * @return a response DTO with a success message
+     */
     public MessageDtoResponse creatMessage(MessageDtoRequest messageDtoRequest) {
         MessageModel message = new MessageModel();
         message.setMessage(messageDtoRequest.getMessage());
