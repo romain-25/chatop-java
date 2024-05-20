@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:4200")
 public class RentalsController {
     @Autowired
     private JwtService jwtService;

@@ -1,6 +1,7 @@
 package com.openclassroom.chatopjava.configuration;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,7 +24,9 @@ import javax.crypto.spec.SecretKeySpec;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
-    private String jwtKey = "CyvAycrHQfjQV6bBkS7Vg3yACEmcUcC9aHB7WzH0ngU5wEdU6BH4Bv22KA4uDGge";
+
+    @Value("${jwt.secret.key}")
+    private String jwtKey;
     /**
      * Configures the JwtDecoder bean.
      *
@@ -55,21 +58,6 @@ public class SpringSecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/resources/**",
-                                "/api/images/**",
-                                "/static/**",
-                                "/images/**",
-                                "/uploads/**",
-                                "/uploads/images",
-                                "/auth/**",
-                                "/swagger*/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs",
-                                "/v3/api-docs/swagger-config"
-                                ).permitAll()
-                        .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }

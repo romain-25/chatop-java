@@ -1,4 +1,5 @@
 package com.openclassroom.chatopjava.service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -15,16 +16,14 @@ import java.time.temporal.ChronoUnit;
 public class JwtService {
     private JwtEncoder jwtEncoder;
     private JwtDecoder jwtDecoder;
-
     /**
      * Constructs a new JwtService with the given JwtEncoder.
      *
      * @param jwtEncoder the JwtEncoder used for encoding JWT tokens
      */
-    public JwtService(JwtEncoder jwtEncoder) {
+    public JwtService(@Value("${jwt.secret.key}") String jwtKey, JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
-        String secret = "CyvAycrHQfjQV6bBkS7Vg3yACEmcUcC9aHB7WzH0ngU5wEdU6BH4Bv22KA4uDGge";
-        SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+        SecretKey secretKey = new SecretKeySpec(jwtKey.getBytes(), "HmacSHA256");
         this.jwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey).build();
     }
     /**
@@ -34,7 +33,6 @@ public class JwtService {
      * @return a JWT token as a String
      */
     public String generateToken(Authentication authentication) {
-        System.out.println(authentication);
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("http://localhost:4200")
