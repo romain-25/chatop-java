@@ -95,6 +95,7 @@ public class RentalsService {
      * @param bearerToken  the authentication token of the user
      * @param picture      the picture file of the rental
      * @return a response DTO with a success message
+     * {@link MessageDtoResponse}
      * @throws IOException if there is an error processing the picture file
      */
     public MessageDtoResponse createRental(String name, Long surface, Long price, String description, String bearerToken, MultipartFile picture ) throws IOException {
